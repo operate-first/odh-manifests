@@ -8,16 +8,11 @@ resources:
 - trino-db-pvc.yaml
 - trino-db-dc.yaml
 - trino-db-service.yaml
-- hive-metastore-dc.yaml
-- hive-metastore-service.yaml
 - hive-metastore-entrypoint.yaml
 - hive-db-secret.yaml
 - hadoop-config.yaml
 - hive-config.yaml
 - hive-jmx-config.yaml
-- trino-config-secret.yaml
-- trino-config-monitoring-secret.yaml
-- trino-catalog-secret.yaml
 - trino-coordinator-dc.yaml
 - trino-service.yaml
 - trino-route.yaml
@@ -127,6 +122,13 @@ vars:
       kind: ConfigMap
     fieldref:
       fieldpath: data.trino_memory_limit
+  - name: trino_image
+    objref:
+      name: trino-config
+      apiVersion: v1
+      kind: ConfigMap
+    fieldref:
+      fieldpath: data.trino_image
 
 configurations:
   - params.yaml
@@ -140,4 +142,4 @@ images:
     newTag: 2.3.3-002
   - name: trino
     newName: quay.io/opendatahub/trino
-    newTag: '361'
+    newTag: latest

@@ -20,32 +20,13 @@ spec:
     spec:
       volumes:
         - name: trino-config-volume
-          secret:
-            secretName: trino-config
+          configMap:
+            name: trino-configfiles
             defaultMode: 420
-            items:
-              - key: config-coordinator.properties
-                path: config-coordinator.properties
-              - key: jvm-coordinator.config
-                path: jvm-coordinator.config
-              - key: log.properties
-                path: log.properties
-              - key: node.properties
-                path: node.properties
-        - name: prometheus-exporter
-          secret:
-            secretName: trino-config-monitoring
-            defaultMode: 420
-            items:
-              - key: config.yaml
-                path: config.yaml
         - name: trino-catalogs-volume
-          secret:
-            secretName: trino-catalog
+          configMap:
+            name: trino-catalog
             defaultMode: 420
-            items:
-              - key: hive.properties
-                path: hive.properties
       containers:
         - resources:
             requests:
@@ -63,27 +44,19 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.uid
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: $(s3_credentials_secret)
-                  key: AWS_ACCESS_KEY_ID
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: $(s3_credentials_secret)
-                  key: AWS_SECRET_ACCESS_KEY
           ports:
             - containerPort: 8080
               protocol: TCP
           volumeMounts:
             - name: trino-config-volume
               mountPath: /etc/trino
-            - name: prometheus-exporter
-              mountPath: /etc/trino/prometheus
             - name: trino-catalogs-volume
               mountPath: /etc/trino/catalog
-          image: trino
+          image: $(trino_image)
+          envFrom:
+            - secretRef:
+                name: trino-oauth
+            - secretRef:
+                name: s3buckets
           args:
             - --config=/etc/trino/config-coordinator.properties
-            - --jvm-config=/etc/trino/jvm-coordinator.config
