@@ -6,6 +6,8 @@ metadata:
   labels:
     opendatahub.io/component: "true"
     component.opendatahub.io/name: superset
+  annotations:
+    volume.beta.kubernetes.io/storage-class: moc-nfs-csi
 spec:
   accessModes:
     - ReadWriteOnce
