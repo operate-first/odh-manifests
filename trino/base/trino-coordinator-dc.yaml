@@ -78,6 +78,8 @@ spec:
                 name: s3buckets
             - secretRef:
                 name: shared-secret
+            - secretRef:
+                name: trino-secret-env
           args:
             - --config=/etc/trino/config-coordinator.properties
             - --jvm-config=/etc/trino/jvm-coordinator.config
