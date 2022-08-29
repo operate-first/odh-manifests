@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     configmap.reloader.stakater.com/reload: "trino-configfiles, trino-catalog"
-    secret.reloader.stakater.com/reload: "s3buckets"
+    secret.reloader.stakater.com/reload: "s3buckets, trino-secret-env"
   name: trino-worker
   labels:
     instance: trino
