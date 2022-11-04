@@ -24,10 +24,10 @@ data:
               value: $(s3_endpoint_url)
           resources:
             requests:
-              memory: 1Gi
-              cpu: 500m
+              memory: 8Gi
+              cpu: 1
             limits:
-              memory: 2Gi
+              memory: 16Gi
               cpu: 1
         - name: Spark Notebook
           images:
