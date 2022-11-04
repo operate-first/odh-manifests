@@ -1,0 +1,26 @@
+- op: replace
+  path: /data/jupyterhub-singleuser-profiles.yaml
+  value: |
+    profiles:
+    - name: globals
+      node_tolerations:
+        - key: odh/notebook
+          operator: Equal
+          value: "true"
+          effect: NoSchedule
+      node_affinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/odh-notebook
+                operator: Exists
+      env:
+        - name: S3_ENDPOINT_URL
+          value: $(s3_endpoint_url)
+      resources:
+        requests:
+          memory: 8Gi
+          cpu: 500m
+        limits:
+          memory: 16Gi
+          cpu: 1
